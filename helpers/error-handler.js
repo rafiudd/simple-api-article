@@ -9,14 +9,13 @@ function errorHandler(err, req, res, next) {
 
     if (err.name === 'ValidationError') {
         // mongoose validation error
-        return res.status(400).json({ message: err.message });
+        return res.status(400).json({ message: err });
     }
-    console.log(err)
     if (err.name === 'UnauthorizedError') {
         // jwt authentication error
-        return res.status(401).json({ message: 'Invalid Basic Auth' });
+        return res.status(401).json({ message: err });
     }
 
     // default to 500 server error
-    return res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err });
 }
