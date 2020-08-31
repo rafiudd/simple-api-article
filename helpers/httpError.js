@@ -4,7 +4,9 @@ const ERROR = {
     'CONFLICT': 409,
     'EXPECTATION_FAILED': 417,
     'FORBIDDEN': 403,
-    'UNAUTHORIZED': 401
+    'UNAUTHORIZED': 401,
+    'SERVICE_UNAVAILABLE': 503,
+    'UNPROCESSABLE_ENTITY': 422
   };
   
   module.exports = {
