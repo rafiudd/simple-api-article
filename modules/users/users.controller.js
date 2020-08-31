@@ -59,8 +59,11 @@ async function login(req, res) {
         if(checkEmail && bcrypt.compareSync(model.password, checkEmail.password)) {
             const token = jwt.sign(
                 { sub: checkEmail.userId }, 
-                process.env.SECRET_JWT, 
-                { expiresIn: process.env.TOKEN_EXPIRES }
+                process.env.SECRET_JWT,
+                { 
+                    algorithm: "HS256",
+                    expiresIn: 900
+                }
             );
             let returnModel = {
                 userId: checkEmail.userId,
@@ -77,7 +80,7 @@ async function login(req, res) {
         } else {
             return response.wrapper_error(res, httpError.UNPROCESSABLE_ENTITY, "sorry, wrong password");
         }
-    } catch (error) {        
+    } catch (error) {
         return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
     }
 }
