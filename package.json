@@ -1,0 +1,37 @@
+{
+  "name": "match-expert-backend",
+  "version": "1.0.0",
+  "description": "Docs https://docs.google.com/document/d/1w89hxS2gZFssGFAPs6C-807EFYZb6C3zCDMj4nNJWH4/edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "email-templates": "^7.0.5",
+    "handlebars": "^4.7.6",
+    "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
+    "mongodb": "^3.4.1",
+    "mongoose": "^5.8.7",
+    "nodemailer": "^6.4.6",
+    "rootpath": "^0.1.2",
+    "uuid": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "bcryptjs": "^2.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafiudd/match-expert-backend.git"
+  },
+  "keywords": [],
+  "author-name": "Rayhan Rafiud Darojat",
+  "author-mail": "rayhanrafiudd@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafiudd/match-expert-backend/issues"
+  },
+  "homepage": "https://github.com/rafiudd/match-expert-backend#readme"
+}

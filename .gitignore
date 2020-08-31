@@ -1,0 +1,7 @@
+mongo-volume/
+node_modules/
+
+package-lock.json
+init-mongo.js
+.vercel
+.env
