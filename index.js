@@ -3,16 +3,13 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const basicAuth = require('express-basic-auth');
 const dotenv = require('dotenv');
 const errorHandler = require('helpers/error-handler');
-dotenv.config();
+const jwt = require('helpers/jwt');
 
-mongoose.connect(process.env.MONGODB_URI, (err, client) => {
-    if (err) return console.error(err)
-    console.log('Connected to Database')
-})// global error handler
+dotenv.config();
+app.use(jwt());
 app.use(errorHandler);
 
 const useBasicAuth = basicAuth({
@@ -36,6 +33,7 @@ app.get('/', useBasicAuth, function (req, res) {
 });
 
 app.use('/api/v1/users',useBasicAuth, require('./modules/users/users.controller'));
+app.use('/api/v1/article', require('./modules/article/article.controller'));
 
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 8080;
