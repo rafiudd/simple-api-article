@@ -21,7 +21,19 @@ const response =  {
 
     redirect : (res, code, link) => {
       return res.redirect(link);
+    },
+    
+    paginationData : (res, data, meta, description = '', code = 200) => { 
+      let respon = {
+        err: null, 
+        message: description, 
+        data, 
+        meta, 
+        code
+      }
+      return res.send(respon);
     }
+
   }
   
   module.exports = response;
