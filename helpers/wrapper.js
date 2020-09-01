@@ -25,11 +25,11 @@ const response =  {
     
     paginationData : (res, data, meta, description = '', code = 200) => { 
       let respon = {
-        err: null, 
+        code,
+        success: true, 
         message: description, 
         data, 
         meta, 
-        code
       }
       return res.send(respon);
     }
