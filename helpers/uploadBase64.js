@@ -23,6 +23,9 @@ const uploadImages = async (bucket, rawImg, objName) => {
   case 'jpeg':
     data_url = `data:image/jpeg${rawImg}`;
     break;
+  case 'gif':
+    data_url = `data:image/gif${rawImg}`;
+    break;
   }
 
   ba64.writeImageSync(path, data_url);
