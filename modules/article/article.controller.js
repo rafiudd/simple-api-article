@@ -204,6 +204,7 @@ async function updateArticle(req, res) {
             description: body.description ? body.description: queryData.description,
             image: uploadPhoto ? uploadPhoto: queryData.image,
             tag: body.tag ? body.tag: queryData.tag,
+            slug: slugTitle ? slugTitle: queryData.slug,
             updateAt: new Date().toISOString()
         }
 
