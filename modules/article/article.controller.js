@@ -14,6 +14,8 @@ const minio = require('../../helpers/minioSdk');
 router.post('/create', createArticle);
 router.get('/all', getAllArticle);
 router.get('/', getDetailArticle);
+router.delete('/delete/:articleId', deleteArticle);
+router.put('/update/:articleId', updateArticle);
 module.exports = router;
 
 async function createArticle(req,res) {
@@ -132,8 +134,39 @@ async function getDetailArticle(req, res) {
             tag: queryData.tag,
             createdAt: queryData.createdAt
         }
-        return response.wrapper_success(res, 200, 'Success create article', result);
+        return response.wrapper_success(res, 200, 'Success get detail article', result);
     } catch (error) {
         return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
+    }
+}
+
+async function deleteArticle(req, res) {
+    try {
+        let { params } = req;
+        let { articleId } = params;
+        let queryData = await Article.findOneAndDelete({ "articleId": articleId });
+
+        if(!queryData) {
+            return response.wrapper_error(res, httpError.SERVICE_UNAVAILABLE, "sorry, article not available");
+        }
+
+        let removeImage = await minio.removeObject(process.env.MINIO_BUCKET, queryData.image);
+
+        if(!removeImage) {
+            return wrapper.wrapper_error(res, httpError.INTERNAL_ERROR, 'error delete image');
+        }
+
+        return response.wrapper_success(res, 201, 'Success delete article', queryData);
+    } catch (error) {
+        console.log(error)
+        return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
+    }
+}
+
+async function updateArticle(req, res) {
+    try {
+        
+    } catch (error) {
+        return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");        
     }
 }
