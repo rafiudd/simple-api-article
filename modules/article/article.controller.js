@@ -131,12 +131,13 @@ async function getDetailArticle(req, res) {
             description: queryData.description,
             slug: queryData.slug,
             tag: queryData.tag,
-            createdBy: value.createdBy,
+            createdBy: queryData.createdBy,
             createdAt: queryData.createdAt,
             updateAt: queryData.updateAt
         }
         return response.wrapper_success(res, 200, 'Success get detail article', result);
     } catch (error) {
+        console.log(error)
         return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
     }
 }
