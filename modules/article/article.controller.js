@@ -1,8 +1,7 @@
-const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const dotenv = require('dotenv');
 const slugify = require('slugify')
-const router = express.Router();
+const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const { ERROR: httpError } = require('../../helpers/httpError');
@@ -11,19 +10,16 @@ const { Article } = require('../../helpers/db');
 const uploads = require('../../helpers/uploadBase64');
 const minio = require('../../helpers/minioSdk');
 
-router.post('/create', createArticle);
-router.get('/all', getAllArticle);
-router.get('/', getDetailArticle);
-router.delete('/delete/:articleId', deleteArticle);
-router.put('/update/:articleId', updateArticle);
-module.exports = router;
-
 async function createArticle(req,res) {
    try {
         let { body } = req;
         let slugTitle = slugify(body.title, {
             lower: true
         });
+
+        let token = req.headers.authorization.replace('Bearer ','');    
+        let decode = jwt.decode(token);
+        let userId = decode.sub;
 
         const bucket = process.env.MINIO_BUCKET;
         let checkBucket = await minio.isBucketExist(bucket);
@@ -49,7 +45,8 @@ async function createArticle(req,res) {
             description: body.description,
             image: uploadPhoto,
             tag: body.tag,
-            slug: slugTitle
+            slug: slugTitle,
+            createdBy: userId
         }
 
         const isExist = await Article.findOne({ "title" : model.title });
@@ -84,6 +81,7 @@ async function getAllArticle(req, res) {
                 description: value.description,
                 slug: value.slug,
                 tag: value.tag,
+                createdBy: value.createdBy,
                 createdAt: value.createdAt,
                 updateAt: value.updateAt
             }
@@ -133,6 +131,7 @@ async function getDetailArticle(req, res) {
             description: queryData.description,
             slug: queryData.slug,
             tag: queryData.tag,
+            createdBy: value.createdBy,
             createdAt: queryData.createdAt,
             updateAt: queryData.updateAt
         }
@@ -160,7 +159,6 @@ async function deleteArticle(req, res) {
 
         return response.wrapper_success(res, 201, 'Success delete article', queryData);
     } catch (error) {
-        console.log(error)
         return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
     }
 }
@@ -194,7 +192,6 @@ async function updateArticle(req, res) {
 
         const bucket = process.env.MINIO_BUCKET;
 
-
         let uploadPhoto = await uploads.uploadImages(bucket, body.image, objectName);
 
         if (uploadPhoto.err) {
@@ -214,4 +211,12 @@ async function updateArticle(req, res) {
     } catch (error) {
         return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");        
     }
+}
+
+module.exports = {
+    createArticle,
+    getAllArticle,
+    getDetailArticle,
+    deleteArticle,
+    updateArticle
 }

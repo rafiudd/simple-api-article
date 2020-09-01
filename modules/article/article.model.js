@@ -25,6 +25,9 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    createdBy: { 
+        type: String
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 
