@@ -89,7 +89,7 @@ async function updateUser(req, res) {
         let queryData = await User.findOne({ "userId": userId });
        
         if(!queryData) {
-            return response.wrapper_error(res, httpError.SERVICE_UNAVAILABLE, "sorry, article not available");
+            return response.wrapper_error(res, httpError.SERVICE_UNAVAILABLE, "sorry, user not available");
         }
 
         let model = {
