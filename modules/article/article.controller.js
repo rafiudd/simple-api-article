@@ -13,6 +13,7 @@ const minio = require('../../helpers/minioSdk');
 
 router.post('/create', createArticle);
 router.get('/all', getAllArticle);
+router.get('/', getDetailArticle);
 module.exports = router;
 
 async function createArticle(req,res) {
@@ -68,7 +69,7 @@ async function getAllArticle(req, res) {
     try {
         let page = parseInt(req.query.page);
         let size = parseInt(req.query.size);
-        const parameterPage = size * (page - 1);
+        let parameterPage = size * (page - 1);
         let query = await Article.find().sort({"createdAt": -1}).limit(size).skip(parameterPage);
         let totalData = await Article.count();
         let result = [];
@@ -96,6 +97,43 @@ async function getAllArticle(req, res) {
 
         return response.paginationData(res, result, metaData, 'Success get all article', 200);
     } catch (error) {
-        console.log(error)
+        return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
+    }
+}
+
+async function getDetailArticle(req, res) {
+    try {
+        let { query } = req;
+        let { slug, articleId } = query;
+        let queryData;
+
+        if(slug) {
+            queryData = await Article.findOne({ "slug": slug });
+        }
+
+        if(articleId) {
+            queryData = await Article.findOne({ "articleId": articleId });
+        }
+
+        if(!slug && !articleId || slug && articleId) {
+            return response.wrapper_error(res, httpError.SERVICE_UNAVAILABLE, "sorry, wrong parameter");
+        }
+
+        if(!queryData) {
+            return response.wrapper_error(res, httpError.SERVICE_UNAVAILABLE, "sorry, article not available");
+        }
+
+        let result = {
+            articleId: queryData.articleId,
+            title: queryData.title,
+            image: `${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET}/${queryData.image}`,
+            description: queryData.description,
+            slug: queryData.slug,
+            tag: queryData.tag,
+            createdAt: queryData.createdAt
+        }
+        return response.wrapper_success(res, 200, 'Success create article', result);
+    } catch (error) {
+        return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");
     }
 }
