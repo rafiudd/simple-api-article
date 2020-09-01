@@ -23,7 +23,7 @@ async function createArticle(req,res) {
         let { body } = req;
         let slugTitle = slugify(body.title, {
             lower: true
-        })
+        });
 
         const bucket = process.env.MINIO_BUCKET;
         let checkBucket = await minio.isBucketExist(bucket);
@@ -84,7 +84,8 @@ async function getAllArticle(req, res) {
                 description: value.description,
                 slug: value.slug,
                 tag: value.tag,
-                createdAt: value.createdAt
+                createdAt: value.createdAt,
+                updateAt: value.updateAt
             }
 
             result.push(model)
@@ -132,7 +133,8 @@ async function getDetailArticle(req, res) {
             description: queryData.description,
             slug: queryData.slug,
             tag: queryData.tag,
-            createdAt: queryData.createdAt
+            createdAt: queryData.createdAt,
+            updateAt: queryData.updateAt
         }
         return response.wrapper_success(res, 200, 'Success get detail article', result);
     } catch (error) {
@@ -165,7 +167,50 @@ async function deleteArticle(req, res) {
 
 async function updateArticle(req, res) {
     try {
+        let { params, body } = req;
+        let { articleId } = params;
+        let slugTitle = slugify(body.title, {
+            lower: true
+        });
+
+        let queryData = await Article.findOne({ "articleId": articleId });
         
+        if(!queryData) {
+            return response.wrapper_error(res, httpError.SERVICE_UNAVAILABLE, "sorry, article not available");
+        }
+
+        if(body.image) {
+            let removeImage = await minio.removeObject(process.env.MINIO_BUCKET, queryData.image);
+
+            if(!removeImage) {
+                return wrapper.wrapper_error(res, httpError.INTERNAL_ERROR, 'error delete image');
+            }
+        }
+
+        const objectName = {
+            folder: body.title,
+            filename: slugTitle
+        };
+
+        const bucket = process.env.MINIO_BUCKET;
+
+
+        let uploadPhoto = await uploads.uploadImages(bucket, body.image, objectName);
+
+        if (uploadPhoto.err) {
+            return wrapper.wrapper_error(res, httpError.INTERNAL_ERROR, 'error upload to minio');
+        }
+
+        let model = {
+            title: body.title ? body.title: queryData.title,
+            description: body.description ? body.description: queryData.description,
+            image: uploadPhoto ? uploadPhoto: queryData.image,
+            tag: body.tag ? body.tag: queryData.tag,
+            updateAt: new Date().toISOString()
+        }
+
+        let command = await Article.updateOne({ "articleId": articleId }, model)
+        return response.wrapper_success(res, 201, 'Success update article', command);
     } catch (error) {
         return response.wrapper_error(res, httpError.INTERNAL_ERROR, "something when wrong");        
     }
