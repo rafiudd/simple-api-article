@@ -36,6 +36,10 @@ const schema = new Schema({
     createdAt: { 
         type: Date, 
         default: Date.now 
+    },
+    updateAt: { 
+        type: Date, 
+        default: Date.now 
     }
 });
 
