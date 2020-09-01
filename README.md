@@ -1,4 +1,5 @@
-# Express API Starter
+# Simple API Article
+Create simple crud api article and user managament(login, register, update user)
 
 ### Dev Setup
 - Nodejs - Express
@@ -7,40 +8,55 @@
 
 ### Environtment Setup
 - Clone this repository
-- Copy .env.local to .env
-- If you want up to server use .env.production
-- Copy config.example.json to config.json
-- Set your environment too
+- Copy ```.env.example``` to ```.env```
+- Copy ```init-mongo.example.js``` to ```init-mongo.js```
 
 
-### Mongodb User Setup
-- Copy init-mongo.example.js to init-mongo.js
-- Change up to you
+### Init Mongo Setup
 ```
 db.createUser(
     {
         user : "yourusername",
-        pwd : "yourpassword",
+        pwd : "yourpasswordd",
         roles : [
             {
                 role : "readWrite",
-                db : "db"            
+                db : "article"            
             }        
         ]    
     }
 )
 ```
 
-### How To Use
-- Install package that used in this project
+### Docker Compose Setup
+
+```
+version: '3'
+services:
+    database:
+        image: 'mongo'
+        container_name: 'mongo-container'
+        environment:
+            - MONGO_INITDB_DATABASE=article
+            - MONGO_INITDB_ROOT_USERNAME=yourusername
+            - MONGO_INITDB_ROOT_PASSWORD=yourpassword
+        volumes:
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+            - ./mongo-volume:/data/db
+        ports:
+            - '27017:27017'
+```
+
+### How To Run
+Install package that used in this project
 ```
 npm install or yarn install
 ```
-- Next run mongo container
+Run mongo container
 ```bash
 docker-compose up -d
 ```
-- Last 
+Run project 
 ```
 nodemon or node index.js
 ```
@@ -48,8 +64,23 @@ nodemon or node index.js
 
 ### Postman Docs
 
-https://documenter.getpostman.com/view/4289441/T1LTejTW
+https://documenter.getpostman.com/view/4289441/TVCe18gx
 
+
+### Postman Collection
+
+https://www.getpostman.com/collections/1d4413fd1f084ed7d556
+
+
+### Minio Service
+```http://167.71.47.202:9000/```
+
+```MINIO_ACCESS_KEY=minio```
+
+```MINIO_SECRET_KEY=minio123```
+
+[Github repository](https://github.com/rafiudd/docker-minio
+)`
 
 
 ### Version

@@ -7,20 +7,24 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "ba64": "^3.0.9",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "email-templates": "^7.0.5",
-    "handlebars": "^4.7.6",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
+    "express-jwt": "^6.0.0",
+    "handlebars": "^4.7.6",
+    "jsonwebtoken": "^8.5.1",
+    "minio": "^7.0.16",
     "mongodb": "^3.4.1",
     "mongoose": "^5.8.7",
     "nodemailer": "^6.4.6",
     "rootpath": "^0.1.2",
-    "uuid": "^8.2.0",
-    "jsonwebtoken": "^8.5.1",
-    "bcryptjs": "^2.4.3"
+    "slugify": "^1.4.5",
+    "uuid": "^8.2.0"
   },
   "repository": {
     "type": "git",

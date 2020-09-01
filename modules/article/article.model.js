@@ -2,36 +2,31 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    userId: { 
+    articleId: { 
         type: String
     },
-    fullname: { 
+    title: { 
         type: String,
         required: true
     },
-    username: { 
+    description: { 
         type: String,
         required: true
     },
-    password: { 
+    image: { 
         type: String,
         required: true
     },
-    age: { 
-        type: Number,
+    tag: { 
+        type: Array,
         required: true
     },
-    address: { 
+    slug: { 
         type: String,
         required: true
     },
-    phone: { 
-        type: String,
-        required: true
-    },
-    email: { 
-        type: String,
-        required: true
+    createdBy: { 
+        type: String
     },
     createdAt: { 
         type: Date, 
@@ -45,4 +40,4 @@ const schema = new Schema({
 
 schema.set('toJSON', { virtuals: true });
 
-module.exports = mongoose.model('Users', schema);
+module.exports = mongoose.model('Article', schema);
