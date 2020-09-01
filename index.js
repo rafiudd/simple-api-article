@@ -36,7 +36,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/api/v1/users/login', useBasicAuth, userController.login);
-app.post('/api/v1/users/login', useBasicAuth, userController.register);
+app.post('/api/v1/users/register', useBasicAuth, userController.register);
 app.put('/api/v1/users/update/:userId', userController.updateUser);
 
 app.post('/api/v1/article/create', articleController.createArticle);
