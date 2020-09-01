@@ -72,13 +72,23 @@ const objectDownload = async (bucketName, objectName, filePath) => {
   }
 };
 
-const objectRemove = async (bucketName, objectName) => {
+const removeObject = async (bucketName, objectName) => {
   try {
     await minioClient.removeObject(bucketName, objectName);
-    return wrapper.wrapper_success(true);
+    const data = {
+      status: true,
+      message: 'Object Removed'
+    };
+    console.log(data);
+    return data;
   } catch (err) {
-    console.log('minioSdk-objectRemove', err.message, 'error remove object');
-    return wrapper.wrapper_error(err);
+    const data = {
+      status: false,
+      message: 'Object Can`t Removed',
+      err
+    };
+    console.log(data);
+    return data;
   }
 };
 
@@ -99,5 +109,5 @@ module.exports = {
   objectUpload,
   objectGetUrl,
   objectDownload,
-  objectRemove
+  removeObject
 };
